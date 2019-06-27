@@ -42,14 +42,7 @@ COPY ./scripts/startenv.sh /
 
 RUN apt-get install environment-modules wget unzip default-jre -y
 WORKDIR /usr/local/
-RUN wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.5.zip && unzip fastqc_v0.11.5.zip
-RUN chmod 755 FastQC/fastqc
-RUN mkdir -p /usr/share/modules/modulefiles/apps/
-COPY ./scripts/fastqc-0.11.5 /usr/share/modules/modulefiles/apps/
 
-# Tidy old files.
-RUN rm -rf fastqc_v0.11.5.zip
-RUN rm -rf 6.1.1
 
 RUN echo "source /etc/profile.d/modules.sh" >> /root/.bashrc
 RUN echo "alias qsub='qsub -P batchuser'" >> /root/.bashrc
@@ -64,10 +57,7 @@ WORKDIR /
 COPY nispat/ nispat
 WORKDIR /nispat
 RUN pip install -e .
-#USER batchuser
 COPY test_normative_modeling/ test_normative_modeling
 WORKDIR /
-RUN chmod -R 777 nispat/*
-RUN mkdir /home/batchuser/puente/
+RUN chmod -R 777 /nispat/*
 ENTRYPOINT /startenv.sh && /bin/bash
-#ENTRYPOINT /bin/bash

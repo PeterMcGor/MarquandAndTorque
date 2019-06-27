@@ -34,38 +34,55 @@
 
 # run normative parallel - set up the scripts to call the test files-
 # setup
+import argparse
 
 import nispat
 import os
 
-processing_dir = os.sep+os.path.dirname(__file__)+os.sep
-python_path = '/opt/conda/bin/python'
-normative_path = os.path.join(os.sep,"nispat", "nispat", "normative.py") #'../nispat/normative.py '
-job_name = 'normmod_test_script'
-covfile_path = os.path.join(processing_dir, 'covariates_HC.txt')
-respfile_path = os.path.join(processing_dir, 'features_HC.txt')
-testcovfile_path = os.path.join(processing_dir, 'covariates_allpatients.txt')
-testrespfile_path = os.path.join(processing_dir, 'features_allpatients.txt')
-batch_size = 50
-memory = '4gb'
-duration = '03:00:00'
+def main():
+
+    processing_dir = os.sep+os.path.dirname(__file__)+os.sep
+    print('Processing dir', processing_dir)
+    processing_dir = args.processing_dir
+    python_path = '/opt/conda/bin/python'
+    normative_path = os.path.join(os.sep,"nispat", "nispat", "normative.py")
+    job_name = 'normmod_test_script'
+    covfile_path = os.path.join(processing_dir, 'covariates_HC.txt')
+    respfile_path = os.path.join(processing_dir, 'features_HC.txt')
+    testcovfile_path = os.path.join(processing_dir, 'covariates_allpatients.txt')
+    testrespfile_path = os.path.join(processing_dir, 'features_allpatients.txt')
+    batch_size = 50
+    memory = '4gb'
+    duration = '03:00:00'
 
 
+    nispat.normative_parallel.execute_nm(processing_dir,
+                                         python_path,
+                                         normative_path,
+                                         job_name,
+                                         covfile_path,
+                                         respfile_path,
+                                         batch_size,
+                                         memory,
+                                         duration,
+                                         testcovfile_path = testcovfile_path,
+                                         testrespfile_path = testrespfile_path
+                                         )
 
-# run normative modeling test script
 
-nispat.normative_parallel.execute_nm(processing_dir, 
-                                     python_path, 
-                                     normative_path, 
-                                     job_name, 
-                                     covfile_path, 
-                                     respfile_path, 
-                                     batch_size, 
-                                     memory, 
-                                     duration,
-                                     testcovfile_path = testcovfile_path,
-                                     testrespfile_path = testrespfile_path
-                                     )
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--processing_dir',
+        help='Full path to the processing directory.',
+        type=str,
+        default=None
+    )
+
+    args = parser.parse_args()
+    arguments = args.__dict__
+
+    main()
 
 
 
