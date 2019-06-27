@@ -10,10 +10,13 @@ I have included Andre Marquand work for nispat --> https://github.com/amarquand/
 
 `docker build -t torque .`
 
-#### Run
+#### Run the docker with a link to you machine where the data is placed (-v argument). The "data" folder must contain files: covariates_allpatients.txt, covariates_HC.txt, features_allpatients.txt, features_HC.txt
 
-`docker run -h master --privileged -it torque bash`
+`docker run -v /path/to/the/data/dir:/mnt/data -h master --privileged -it torque bash`
 
-#### Submit Jobs
+#### Once within the docker
+###### change to user "batchuser"
+`su batchuser`
+###### Run the script "run_normative_parallel_test.py" pointing to your data (mounted) with "processing_dir" argument
+`/opt/conda/bin/python nispat/test_normative_modeling/run_normative_parallel_test.py --processing_dir /mnt/data/`
 
-`qsub -P batchuser`
