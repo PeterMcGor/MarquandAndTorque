@@ -38,7 +38,6 @@ RUN ldconfig &&\
     printf "\$pbsserver $HOSTNAMEt \n\$logevent 255" > /var/spool/torque/mom_priv/config
 
 RUN adduser --disabled-password --gecos '' batchuser
-
 COPY ./scripts/startenv.sh /
 
 RUN apt-get install environment-modules wget unzip default-jre -y
@@ -62,9 +61,13 @@ ENV PATH /opt/conda/bin:${PATH}
 ENV LANG C.UTF-8
 
 WORKDIR /
-
 COPY nispat/ nispat
 WORKDIR /nispat
 RUN pip install -e .
+#USER batchuser
+COPY test_normative_modeling/ test_normative_modeling
 WORKDIR /
+RUN chmod -R 777 nispat/*
+RUN mkdir /home/batchuser/puente/
 ENTRYPOINT /startenv.sh && /bin/bash
+#ENTRYPOINT /bin/bash
