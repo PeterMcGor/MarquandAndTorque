@@ -54,6 +54,8 @@ def main():
     batch_size = 50
     memory = '4gb'
     duration = '03:00:00'
+    cv_folds = args.cv_folds
+    testrespfile_path = testrespfile_path if cv_folds is None else None
 
 
     nispat.normative_parallel.execute_nm(processing_dir,
@@ -76,6 +78,12 @@ if __name__ == '__main__':
         '--processing_dir',
         help='Full path to the processing directory.',
         type=str,
+        default=None
+    )
+    parser.add_argument(
+        '--cv_folds',
+        help='Folds for CV.',
+        type=int,
         default=None
     )
 
