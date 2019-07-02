@@ -54,9 +54,10 @@ ENV PATH /opt/conda/bin:${PATH}
 ENV LANG C.UTF-8
 
 WORKDIR /
+COPY setup.py setup.py
+RUN pip install -e .
 COPY nispat/ nispat
 WORKDIR /nispat
-RUN pip install -e .
 COPY test_normative_modeling/ test_normative_modeling
 WORKDIR /
 RUN chmod -R 777 /nispat/*

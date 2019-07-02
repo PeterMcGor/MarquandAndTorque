@@ -36,7 +36,7 @@
 # setup
 import argparse
 
-import nispat
+import nispat.nispat as nispat
 import os
 
 def main():
@@ -68,8 +68,9 @@ def main():
                                          batch_size,
                                          memory,
                                          duration,
-                                         testcovfile_path = testcovfile_path,
-                                         testrespfile_path = testrespfile_path
+                                         cv_folds=cv_folds,
+                                         testcovfile_path=testcovfile_path,
+                                         testrespfile_path=testrespfile_path
                                          )
 
 

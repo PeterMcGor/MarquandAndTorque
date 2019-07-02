@@ -168,6 +168,7 @@ def execute_nm(processing_dir,
                                        file_extentions)
                 batch_job_path = batch_processing_dir + batch_job_name
                 if cluster_spec is 'torque':
+                    print('EXECUTE_NM', cv_folds)
                     bashwrap_nm(processing_dir=batch_processing_dir,
                                 python_path=python_path,
                                 normative_path=normative_path,
@@ -665,9 +666,11 @@ def bashwrap_nm(processing_dir,
     if testrespfile_path is None:
         if testcovfile_path is None:
             if cv_folds is not None:
+                print("bashwrap_nm IF", cv_folds)
                 job_call = [python_path + ' ' + normative_path + ' -c ' +
                             covfile_path + ' -k ' + str(cv_folds)]
             else:
+                print("CV_FOLDS ELSE", cv_folds)
                 raise(ValueError, """If the testresponsefile_path and
                                   testcovfile_path are specified cv_folds
                                   must be larger than or equal to two(2)""")

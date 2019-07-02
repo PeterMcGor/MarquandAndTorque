@@ -34,8 +34,8 @@ except ImportError:
     del path
 
     import fileio
-    from utils import compute_pearsonr, CustomCV
-    from normative_model.norm_utils import norm_init
+    from nispat.nispat.utils import compute_pearsonr, CustomCV
+    from nispat.nispat.normative_model.norm_utils import norm_init
 
 
 def load_response_vars(datafile, maskfile=None, vol=True):
