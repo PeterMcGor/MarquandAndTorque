@@ -23,4 +23,8 @@ I have included Andre Marquand work for nispat --> https://github.com/amarquand/
 ###### Run the script "run_normative_parallel_test.py" pointing to your data (mounted) with "processing_dir" argument and CV specifying the number of folds
 `/opt/conda/bin/python nispat/test_normative_modeling/run_normative_parallel_test.py --processing_dir /mnt/data/ --cv_folds #folds`
 
+###### Include the parameter --cpu_cores to specify the number of cores to use. By default the script employ all the cores in the machines - 2
+
+`/opt/conda/bin/python nispat/test_normative_modeling/run_normative_parallel_test.py --processing_dir /mnt/data/ --cv_folds #folds --cpu_cores #n_cores`
+
 

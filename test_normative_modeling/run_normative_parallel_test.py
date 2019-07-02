@@ -36,13 +36,13 @@
 # setup
 import argparse
 
-import nispat.nispat as nispat
 import os
+import multiprocessing
+
+import nispat.nispat as nispat
+
 
 def main():
-
-    processing_dir = os.sep+os.path.dirname(__file__)+os.sep
-    print('Processing dir', processing_dir)
     processing_dir = args.processing_dir
     python_path = '/opt/conda/bin/python'
     normative_path = os.path.join(os.sep,"nispat", "nispat", "normative.py")
@@ -55,8 +55,10 @@ def main():
     memory = '4gb'
     duration = '03:00:00'
     cv_folds = args.cv_folds
+    log_path = os.path.join(processing_dir, job_name+".log")
     testrespfile_path = testrespfile_path if cv_folds is None else None
     testcovfile_path = testcovfile_path if cv_folds is None else None
+    cpu_cores = args.cpu_cores
 
 
     nispat.normative_parallel.execute_nm(processing_dir,
@@ -68,9 +70,11 @@ def main():
                                          batch_size,
                                          memory,
                                          duration,
+                                         cpu_cores=cpu_cores,
                                          cv_folds=cv_folds,
                                          testcovfile_path=testcovfile_path,
-                                         testrespfile_path=testrespfile_path
+                                         testrespfile_path=testrespfile_path,
+                                         log_path=log_path
                                          )
 
 
@@ -87,6 +91,13 @@ if __name__ == '__main__':
         help='Folds for CV.',
         type=int,
         default=None
+    )
+
+    parser.add_argument(
+        '--cpu_cores',
+        help='CPU cores to use.',
+        type=int,
+        default=multiprocessing.cpu_count() - 2
     )
 
     args = parser.parse_args()

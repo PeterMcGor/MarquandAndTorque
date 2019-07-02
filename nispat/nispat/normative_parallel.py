@@ -21,6 +21,8 @@
 from __future__ import print_function
 from __future__ import division
 
+import multiprocessing
+
 
 def execute_nm(processing_dir,
                python_path,
@@ -31,6 +33,7 @@ def execute_nm(processing_dir,
                batch_size,
                memory,
                duration,
+               cpu_cores = multiprocessing.cpu_count() - 2,
                cv_folds=None,
                testcovfile_path=None,
                testrespfile_path=None,
@@ -178,7 +181,8 @@ def execute_nm(processing_dir,
                                 testcovfile_path=testcovfile_path,
                                 testrespfile_path=testrespfile_path,
                                 alg=alg,
-                                configparam=configparam)
+                                configparam=configparam,
+                                cpu_cores=cpu_cores)
                     qsub_nm(job_path=batch_job_path,
                             log_path=log_path,
                             memory=memory,
@@ -603,6 +607,7 @@ def bashwrap_nm(processing_dir,
                 job_name,
                 covfile_path,
                 respfile_path,
+                cpu_cores = multiprocessing.cpu_count() - 2,
                 cv_folds=None,
                 testcovfile_path=None,
                 testrespfile_path=None,
@@ -647,7 +652,7 @@ def bashwrap_nm(processing_dir,
     output_changedir = ['cd ' + processing_dir + '\n']
 
     bash_lines = '#!/bin/bash\n'
-    bash_cores = 'export OMP_NUM_THREADS=1\n'
+    bash_cores = 'export OMP_NUM_THREADS='+str(cpu_cores)+'\n'
     bash_environment = [bash_lines + bash_cores]
 
     # creates call of function for normative modelling
