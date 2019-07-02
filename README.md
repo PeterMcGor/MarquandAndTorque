@@ -17,6 +17,10 @@ I have included Andre Marquand work for nispat --> https://github.com/amarquand/
 #### Once within the docker
 ###### change to user "batchuser"
 `su batchuser`
-###### Run the script "run_normative_parallel_test.py" pointing to your data (mounted) with "processing_dir" argument
+###### Run the script "run_normative_parallel_test.py" pointing to your data (mounted) with "processing_dir" argument specifiying testrespfile_path and testcovfile_path (without CV)
 `/opt/conda/bin/python nispat/test_normative_modeling/run_normative_parallel_test.py --processing_dir /mnt/data/`
+
+###### Run the script "run_normative_parallel_test.py" pointing to your data (mounted) with "processing_dir" argument and CV specifying the number of folds
+`/opt/conda/bin/python nispat/test_normative_modeling/run_normative_parallel_test.py --processing_dir /mnt/data/ --cv_folds #folds`
+
 
