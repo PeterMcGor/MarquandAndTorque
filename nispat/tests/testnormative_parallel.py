@@ -2,14 +2,14 @@
 """
 Created on Wed Jan 18 14:34:06 2017
 
-@author: andmar
+@author: andmar corred PM Gordaliza
 """
 #import nispat
 import os
 import sys
 import time
-sys.path.append('/home/mrstats/andmar/sfw/nispat/nispat')
-from normative_parallel import execute_nm, collect_nm, delete_nm
+#sys.path.append('/home/mrstats/andmar/sfw/nispat/nispat')
+from nispat.nispat.normative_parallel import execute_nm, collect_nm, delete_nm
 
 #wdir = '/home/mrstats/andmar/py.sandbox/normative_oslo/'
 #respfile = os.path.join(wdir, 'ICA100_oslo15_v2_spaces.txt')

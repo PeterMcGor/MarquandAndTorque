@@ -56,6 +56,7 @@ def main():
     duration = '03:00:00'
     cv_folds = args.cv_folds
     testrespfile_path = testrespfile_path if cv_folds is None else None
+    testcovfile_path = testcovfile_path if cv_folds is None else None
 
 
     nispat.normative_parallel.execute_nm(processing_dir,
