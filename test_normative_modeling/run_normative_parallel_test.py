@@ -52,8 +52,8 @@ def main():
     testcovfile_path = os.path.join(processing_dir, 'covariates_allpatients.txt')
     testrespfile_path = os.path.join(processing_dir, 'features_allpatients.txt')
     batch_size = 50
-    memory = '4gb'
-    duration = '03:00:00'
+    memory = args.memory
+    duration = args.duration
     cv_folds = args.cv_folds
     log_path = os.path.join(processing_dir, job_name+".log")
     testrespfile_path = testrespfile_path if cv_folds is None else None
@@ -98,6 +98,20 @@ if __name__ == '__main__':
         help='CPU cores to use.',
         type=int,
         default=multiprocessing.cpu_count() - 2
+    )
+
+    parser.add_argument(
+        '--memory',
+        help='Memory requirements written as string for example 4gb or 500mb. By default 8gb',
+        type=str,
+        default='8gb'
+    )
+
+    parser.add_argument(
+        '--duration',
+        help='The approximate duration of the job, a string with HH:MM:SS for example 01:01:01. By default 3 hours',
+        type=str,
+        default='03:00:00'
     )
 
     args = parser.parse_args()
