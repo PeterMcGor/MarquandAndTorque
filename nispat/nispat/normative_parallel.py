@@ -16,6 +16,7 @@
 #
 # witten by (primarily) T Wolfers, (adaptated) SM Kia, H Huijsdens, L Parks, 
 # AF Marquand
+# Newer modifications by P.M. Gordaliza
 # -----------------------------------------------------------------------------
 
 from __future__ import print_function
@@ -261,8 +262,7 @@ def split_nm(processing_dir,
                               numsub)
         batch_vec = batch_vec-1
         for n in range(0, (len(batch_vec) - 1)):
-            resp_batch = respfile.ix[:,
-                                     (batch_vec[n] + 1): batch_vec[n + 1]]
+            resp_batch = respfile.ix[:, (batch_vec[n] + 1): batch_vec[n + 1]]
             os.chdir(processing_dir)
             resp = str('resp_batch_' + str(n+1))
             batch = str('batch_' + str(n+1))
@@ -270,21 +270,17 @@ def split_nm(processing_dir,
                 os.makedirs(processing_dir + batch)
                 if (binary==False):
                     fileio.save_pd(resp_batch,
-                                   processing_dir + batch + '/' +
-                                   resp + '.txt')
+                                   processing_dir + batch + '/' + resp + '.txt')
                 else:
-                    resp_batch.to_pickle(processing_dir + batch + '/' +
-                                         resp + '.pkl')
+                    resp_batch.to_pickle(processing_dir + batch + '/' + resp + '.pkl')
 
     # splits response and test responsefile into batches
     else:
         dummy, testrespfile_extension = os.path.splitext(testrespfile_path)
         if (binary and testrespfile_extension != '.pkl'):
-            raise(ValueError, """If binary is True the file format for the
-                  testrespfile file must be .pkl""")
+            raise(ValueError, """If binary is True the file format for the testrespfile file must be .pkl""")
         elif(binary==False and testrespfile_extension != '.txt'):
-            raise(ValueError, """If binary is False the file format for the
-                  testrespfile file must be .txt""")
+            raise(ValueError, """If binary is False the file format for the testrespfile file must be .txt""")
 
         if (binary==False):
             respfile = fileio.load_ascii(respfile_path)
@@ -297,15 +293,12 @@ def split_nm(processing_dir,
         testrespfile = pd.DataFrame(testrespfile)
 
         numsub = len(respfile.ix[0, :])
-        batch_vec = np.arange(0, numsub,
-                              batch_size)
-        batch_vec = np.append(batch_vec,
-                              numsub)
+        batch_vec = np.arange(0, numsub, batch_size)
+        batch_vec = np.append(batch_vec, numsub)
         batch_vec = batch_vec-1
         for n in range(0, (len(batch_vec) - 1)):
             resp_batch = respfile.ix[:, (batch_vec[n] + 1): batch_vec[n + 1]]
-            testresp_batch = testrespfile.ix[:, (batch_vec[n]+1): batch_vec[n +
-                                             1]]
+            testresp_batch = testrespfile.ix[:, (batch_vec[n]+1): batch_vec[n + 1]]
             os.chdir(processing_dir)
             resp = str('resp_batch_' + str(n+1))
             testresp = str('testresp_batch_' + str(n+1))

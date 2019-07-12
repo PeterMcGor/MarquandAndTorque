@@ -2,7 +2,7 @@
 """
 Created on Wed Jan 18 14:34:06 2017
 
-@author: andmar corred PM Gordaliza
+@author: andmar modified by PM Gordaliza
 """
 #import nispat
 import os

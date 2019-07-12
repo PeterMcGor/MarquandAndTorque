@@ -1,3 +1,22 @@
+# -----------------------------------------------------------------------------
+# Run parallel normantive modelling.
+# All processing takes place in the processing directory (processing_dir)
+# All inputs should be text files or binaries and space seperated
+#
+# It is possible to run these functions using...
+#
+# * k-fold cross-validation
+# * estimating a training dataset then applying to a second test dataset
+#
+# First,the data is split for parallel processing.
+# Second, the splits are submitted to the cluster.
+# Third, the output is collected and combined.
+#
+# witten by (primarily) T Wolfers, (adaptated) SM Kia, H Huijsdens, L Parks,
+# AF Marquand
+# Newer modifications by P.M. Gordaliza
+# -----------------------------------------------------------------------------
+
 """
     This function is a motherfunction that executes all parallel normative
     modelling routines. Different specifications are possible using the sub-
@@ -51,7 +70,7 @@ def main():
     respfile_path = os.path.join(processing_dir, 'features_HC.txt')
     testcovfile_path = os.path.join(processing_dir, 'covariates_allpatients.txt')
     testrespfile_path = os.path.join(processing_dir, 'features_allpatients.txt')
-    batch_size = 50
+    batch_size = args.batch_size
     memory = args.memory
     duration = args.duration
     cv_folds = args.cv_folds
@@ -98,6 +117,13 @@ if __name__ == '__main__':
         help='CPU cores to use.',
         type=int,
         default=multiprocessing.cpu_count() - 2
+    )
+
+    parser.add_argument(
+        '--batch_size',
+        help='Number of features in each batch.',
+        type=int,
+        default=50
     )
 
     parser.add_argument(
