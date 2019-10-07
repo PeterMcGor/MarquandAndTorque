@@ -221,7 +221,7 @@ class GPRRFA:
         """ Function to make predictions from the model """
 
         X, y, hyp = self._numpy2torch(X, y, hyp)
-        Xs, *_ = self._numpy2torch(Xs)
+        Xs, _ = self._numpy2torch(Xs)
 
         if (hyp != self.hyp).all() or not(hasattr(self, 'A')):
             self.post(hyp, X, y)

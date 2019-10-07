@@ -124,7 +124,8 @@ def execute_nm(processing_dir,
                                 testcovfile_path=testcovfile_path,
                                 testrespfile_path=batch_testrespfile_path,
                                 alg=alg,
-                                configparam=configparam)
+                                configparam=configparam,
+                                cpu_cores=cpu_cores)
                     qsub_nm(job_path=batch_job_path,
                             log_path=log_path,
                             memory=memory,
@@ -727,6 +728,7 @@ def qsub_nm(job_path,
         qsub_call = ['echo ' + job_path + ' | qsub -N ' + job_path + ' -l ' +
                      'mem=' + memory + ',walltime=' + duration]
     else:
+        log_path = job_path[:-3]+'.log'
         qsub_call = ['echo ' + job_path + ' | qsub -N ' + job_path +
                      ' -l ' + 'mem=' + memory + ',walltime=' + duration +
                      ' -o ' + log_path + ' -e ' + log_path]

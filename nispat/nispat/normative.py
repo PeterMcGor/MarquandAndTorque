@@ -18,12 +18,19 @@ import os
 import sys
 import numpy as np
 import argparse
+#from datetime import datetime
 
 from sklearn.model_selection import KFold
 try:  # run as a package if installed
-    from nispat import fileio
-    from nispat.normative_model.norm_utils import norm_init
-    from nispat.utils import compute_pearsonr, CustomCV
+    #from nispat.nispat import fileio
+    import fileio
+    #from nispat import fileio
+    from normative_model.norm_utils import norm_init
+    #from nispat.nispat.normative_model.norm_utils import norm_init
+    #from nispat.normative_model.norm_utils import norm_init
+    from utils import compute_pearsonr, CustomCV
+    #from nispat.nispat.utils import compute_pearsonr, CustomCV
+    # from nispat.utils import compute_pearsonr, CustomCV
 except ImportError:
     pass
 
@@ -350,7 +357,7 @@ def estimate(respfile, covfile, maskfile=None, cvfolds=None,
                 else:
                     for idx in enumerate(splits.split(X)):
                         fold = idx[0]
-                        fileio.save(Hyp[:, :, fold], 'Hyp_' + str(fold+1) +
+                        fileio.save(Hyp[:, :, fold], 'Hyp_'+ str(fold+1) +
                                     ext, example=exfile, mask=maskvol)
     else:
         if testcov is None:
