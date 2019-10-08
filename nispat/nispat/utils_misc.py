@@ -3,6 +3,7 @@ import numpy as np
 import glob
 from nispat.nispat.normative_parallel import split_nm, collect_nm
 from nispat.nispat import normative
+import argparse
 
 
 def generate_fake_data(output_path, n_features, n_subjects, n_patients=0.1):
@@ -51,9 +52,70 @@ def fit_per_batches(processing_dir, covfile, testcov=None, maskfile=None, from_t
     os.chdir(init_dir)
 
 
+class FunctionsID:
+    GEN_BATCHES = "generate_batches"
+    FIT_BATCHES = "fit_per_batches"
+    COLLECT = "collect_results"
+
+
+fn_dict = {FunctionsID.GEN_BATCHES: generate_batches, FunctionsID.FIT_BATCHES: fit_per_batches,
+           FunctionsID.COLLECT: collect_nm}
+
 
 if __name__ == '__main__':
     print("Utils_misc")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("function", help="function to execute", choices=[f for f in fn_dict.keys()])
+    parser.add_argument("processing_dir")
+    parser.add_argument("responses")
+    parser.add_argument("-m", help="mask file", dest="maskfile", default=None)
+    parser.add_argument("-c", help="covariates file", dest="covfile",
+                        default=None)
+    parser.add_argument("-k", help="cross-validation folds", dest="cvfolds",
+                        default=None)
+    parser.add_argument("-t", help="covariates (test data)", dest="testcov",
+                        default=None)
+    parser.add_argument("-r", help="responses (test data)", dest="testresp",
+                        default=None)
+    parser.add_argument("-a", help="algorithm", dest="alg", default="gpr")
+    parser.add_argument("-x", help="algorithm specific config options",
+                        dest="configparam", default=None)
+    parser.add_argument("-fpb", help="Features per batch", default=50, type=int)
+    parser.add_argument("-b", help="binary file", default=False, dest="binary")
+    parser.add_argument("-frm", type=int)
+    parser.add_argument("-to", type=int)
+    parser.add_argument("-batch_pattern", default='batch_', type=str)
+    parser.add_argument("-save_output", default=True)
+    parser.add_argument("-outputsuffix", default=None)
+
+    args = parser.parse_args()
+    processing_dir = args.processing_dir
+    responses = args.responses
+    covariates = args.covfile
+    test_responses = args.testresp
+    test_covariates = args.testcov
+    features = args.fpb
+    binary = args.binary
+    maskfile = args.maskfile
+    frm = args.frm
+    to = args.to
+    batch_pattern = args.batch_pattern
+    alg = args.alg
+    configparams = args.configparam
+    saveoutput = args.save_output
+    outputsuffix = args.outputsuffix
+
+    if args.function == FunctionsID.GEN_BATCHES:
+        generate_batches(processing_dir, args.responses, testresp=test_responses,
+                         features_per_batch=features, binary=binary)
+    elif args.function == FunctionsID.FIT_BATCHES:
+        fit_per_batches(processing_dir, covfile=covariates, testcov=test_covariates, maskfile=maskfile, from_to=[frm, to],
+                        batch_pattern=batch_pattern, alg=alg, cvfolds=args, configparam=configparams,
+                        saveoutput=saveoutput, outputsuffix=outputsuffix)
+    else:
+        collect_nm(processing_dir, collect=True)
+
+
     # generate_fake_data('/home/pmacias/Projects/JanJo/MarquandAndTorque/fake_data_3', 50, 700)
     # generate_batches("/home/pmacias/Projects/JanJo/MarquandAndTorque/test_normative_modeling/", "features_HC.txt",
     #                  testresp="features_allpatients.txt", features_per_batch=5)
