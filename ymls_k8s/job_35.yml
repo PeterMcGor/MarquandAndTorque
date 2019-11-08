@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: marq-test-1 # 1
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      #priorityClassName: high # 2
+      containers:
+      - name: marq-test-1 # 3
+        image: petermcgor/xeon-normative # 4
+        workingDir: /code # 5
+        command: ["python"] # 6
+        args: ["-u","MarquandAndTorque/nispat/nispat/utils_misc.py", "run_per_covariates", "/data/FWHM_25/lh/",
+               "-ctrain", "/data/covariates_HC.txt", "-ctest", "/data/covariates_patients.txt",
+               "-c_names", "age", "-frm_last_exec", "True"] # 7
+        volumeMounts:
+        - name: data # 8
+          mountPath: /data
+        - name: code
+          mountPath: /code
+        resources:
+          limits:
+            cpu: 25 # 9
+          requests:
+            cpu: 13
+      volumes:
+        - name: data # 10
+          hostPath:
+            path: /mnt/myshare/projects/normative_modelling/planU
+            type: Directory
+        - name: code
+          hostPath:
+            path:  /mnt/myshare/projects/normative_modelling
+            type: Directory
