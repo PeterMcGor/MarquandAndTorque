@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: marq-test-20# 1
+  name: marq-test-20 # 1
 spec:
   template:
     spec:
