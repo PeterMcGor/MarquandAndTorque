@@ -63,6 +63,11 @@ def run_per_covariates(processing_dir, train_covariates, cov_file, cov_test_file
 
     tmp_dir = tempfile.gettempdir()
     id_covs = "-".join(train_covariates)
+    #id_covs = ""
+    print("TRAIN COVARIATES", train_covariates)
+    # for cov in train_covariates:
+    #     id_covs += cov+"-"
+    print("ID_COVS", id_covs)
     tmp_covs_file = os.path.join(tmp_dir, "covs_"+id_covs+".txt")
     # Create a temporal file with the chosen covariates
     print(train_covariates)
@@ -115,7 +120,8 @@ if __name__ == '__main__':
     parser.add_argument("-frm_last_exec", default=False, help="If True, if a result file is already present the batch "
                                                               "is just skipped")
     parser.add_argument("-c_names", default=["age"], help="Covariates to employ in a list", dest="cov_names", nargs='*')
-    parser.add_argument("-collect_suffixes", default=[""],  nargs='*', dest="coll_suf")
+    parser.add_argument("-collect_suffixes", default=[""], help="Collect the results by the given suffixes",  nargs='*',
+                        dest="coll_suf")
 
     args = parser.parse_args()
     processing_dir = args.processing_dirs
@@ -138,6 +144,7 @@ if __name__ == '__main__':
     coll_suf = args.coll_suf
 
     from_to = None if frm == -1 or to == -1 else [frm, to]
+    print("Function", FunctionsID.RUN_PER_COVS)
     if args.function == FunctionsID.GEN_BATCHES:
         generate_batches(processing_dir, responses, testresp=test_responses,
                          features_per_batch=features, binary=binary)
