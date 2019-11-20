@@ -1,14 +1,14 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: marq-test-15-ABIDE # 1
+  name: marq-test-15-abide # 1
 spec:
   template:
     spec:
       restartPolicy: OnFailure
       #priorityClassName: high # 2
       containers:
-      - name: marq-test-15-ABIDE # 3
+      - name: marq-test-15-abide # 3
         image: petermcgor/xeon-normative # 4
         workingDir: /code # 5
         command: ["python"] # 6
