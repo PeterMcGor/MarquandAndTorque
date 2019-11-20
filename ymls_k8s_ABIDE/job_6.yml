@@ -33,4 +33,4 @@ spec:
         - name: code
           hostPath:
             path:  /mnt/myshare/projects/normative_modelling
-            type: Director
+            type: Directory
