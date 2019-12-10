@@ -1,14 +1,14 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: norm-cross-3 # 1
+  name: norm-cross-controls-3 # 1
 spec:
   template:
     spec:
       restartPolicy: OnFailure
       #priorityClassName: high # 2
       containers:
-      - name: norm-cross-3 # 3
+      - name: norm-cross-controls-3 # 3
         image: petermcgor/xeon-normative # 4
         workingDir: /code # 5
         command: ["python"] # 6
