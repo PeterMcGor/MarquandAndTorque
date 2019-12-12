@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: norm-long-ms-2 # 1
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      #priorityClassName: high # 2
+      containers:
+      - name: norm-long-ms-2 # 3
+        image: petermcgor/xeon-normative # 4
+        workingDir: /code # 5
+        command: ["python"] # 6
+        args: ["-u","MarquandAndTorque/nispat/nispat/utils_misc.py", "run_per_covariates", "/data/MS/",
+                "-ctrain", "/data/MS/covariates_HC.txt", "-ctest", "/data/MS/covariates_patients.txt",
+               "-c_names", "age",  "scode", "-frm_last_exec", "True", "-frm", "2", "-to", "3"] # 7
+        volumeMounts:
+        - name: data # 8
+          mountPath: /data
+        - name: code
+          mountPath: /code
+        resources:
+          limits:
+            cpu: 25 # 9
+          requests:
+            cpu: 13
+      volumes:
+        - name: data # 10
+          hostPath:
+            path: /mnt/myshare/projects/normative_modelling/dispersion/long
+            type: Directory
+        - name: code
+          hostPath:
+            path:  /mnt/myshare/projects/normative_modelling
+            type: Directory
