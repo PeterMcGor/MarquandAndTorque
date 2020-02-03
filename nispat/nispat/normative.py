@@ -180,6 +180,7 @@ def estimate(respfile, covfile, maskfile=None, cvfolds=None,
         # we have a separate test dataset
         Xte = fileio.load(testcov)
         testids = range(X.shape[0], X.shape[0]+Xte.shape[0])
+        trainids = range(0, X.shape[0])
         if len(Xte.shape) == 1:
             Xte = Xte[:, np.newaxis]
         if testresp is not None:
@@ -240,22 +241,25 @@ def estimate(respfile, covfile, maskfile=None, cvfolds=None,
         for i in range(0, len(nz)):  # range(0, Nmod):
             print("Estimating model ", i+1, "of", len(nz))      
             try:
-                nm = norm_init(Xz[tr, :], Yz[tr, nz[i]], 
-                               alg=alg, configparam=configparam)
+                nm = norm_init(Xz[tr, :], Yz[tr, nz[i]], alg=alg, configparam=configparam)
                 Hyp[nz[i], :, fold] = nm.estimate(Xz[tr, :], Yz[tr, nz[i]])
-                yhat, s2 = nm.predict(Xz[tr, :], Yz[tr, nz[i]], Xz[te, :], 
-                                      Hyp[nz[i], :, fold])
 
-                Yhat[te, nz[i]] = yhat * sY[i] + mY[i]
-                S2[te, nz[i]] = s2 * sY[i]**2
+                # Work around to get stats for subject in th emodel and out. Instead of te for all :
+                #yhat, s2 = nm.predict(Xz[tr, :], Yz[tr, nz[i]], Xz[te, :], Hyp[nz[i], :, fold])
+                yhat, s2 = nm.predict(Xz[tr, :], Yz[tr, nz[i]], Xz, Hyp[nz[i], :, fold])
+
+                #Yhat[te, nz[i]] = yhat * sY[i] + mY[i]
+                Yhat[:, nz[i]] = yhat * sY[i] + mY[i]
+                #S2[te, nz[i]] = s2 * sY[i]**2
+                S2[:, nz[i]] = s2 * sY[i] ** 2
                 nlZ[nz[i], fold] = nm.neg_log_lik
                 if testcov is None:
-                    Z[te, nz[i]] = (Y[te, nz[i]] - Yhat[te, nz[i]]) / \
-                                   np.sqrt(S2[te, nz[i]])
+                    #Z[te, nz[i]] = (Y[te, nz[i]] - Yhat[te, nz[i]]) / np.sqrt(S2[te, nz[i]])
+                    Z[:, nz[i]] = (Y[:, nz[i]] - Yhat[:, nz[i]]) / np.sqrt(S2[:, nz[i]])
                 else:
                     if testresp is not None:
-                        Z[te, nz[i]] = (Y[te, nz[i]] - Yhat[te, nz[i]]) / \
-                                       np.sqrt(S2[te, nz[i]])
+                        #Z[te, nz[i]] = (Y[te, nz[i]] - Yhat[te, nz[i]]) / np.sqrt(S2[te, nz[i]])
+                        Z[:, nz[i]] = (Y[:, nz[i]] - Yhat[:, nz[i]]) / np.sqrt(S2[:, nz[i]])
 
             except Exception as e:
                 exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -280,6 +284,7 @@ def estimate(respfile, covfile, maskfile=None, cvfolds=None,
     # compute performance metrics
     if testcov is None:
         MSE = np.mean((Y[testids, :] - Yhat[testids, :])**2, axis=0)
+        MSE_tr = np.mean((Y[0, X.shape[0], :] - Yhat[0, X.shape[0], :])**2, axis=0)
         RMSE = np.sqrt(MSE)
         # for the remaining variables, we need to ignore zero variances
         SMSE = np.zeros_like(MSE)
@@ -291,14 +296,29 @@ def estimate(respfile, covfile, maskfile=None, cvfolds=None,
     else:
         if testresp is not None:
             MSE = np.mean((Y[testids, :] - Yhat[testids, :])**2, axis=0)
+            MSE_tr = np.mean((Y[0:X.shape[0], :] - Yhat[0:X.shape[0], :]) ** 2, axis=0)
+
             RMSE = np.sqrt(MSE)
+            RMSE_tr = np.sqrt(MSE_tr)
+
             # for the remaining variables, we need to ignore zero variances
             SMSE = np.zeros_like(MSE)
+            SMSE_tr = np.zeros_like(RMSE_tr)
+
             Rho = np.zeros(Nmod)
+            Rho_tr = np.zeros(Nmod)
+
             pRho = np.ones(Nmod)
+            pRho_tr = np.ones(Nmod)
+
             iy, jy = np.ix_(testids, nz)  # ids tested samples nonzero values
+            iy_tr, jy_tr = np.ix_(range(0, X.shape[0]), nz)
+
             SMSE[nz] = MSE[nz] / np.var(Y[iy, jy], axis=0)
+            SMSE_tr[nz] = MSE[nz] / np.var(Y[iy_tr, jy_tr], axis=0)
+
             Rho[nz], pRho[nz] = compute_pearsonr(Y[iy, jy], Yhat[iy, jy])
+            Rho_tr[nz], pRho_tr[nz] = compute_pearsonr(Y[iy_tr, jy_tr], Yhat[iy_tr, jy_tr])
 
     # Set writing options
     if saveoutput:
@@ -341,16 +361,26 @@ def estimate(respfile, covfile, maskfile=None, cvfolds=None,
                 fileio.save(Hyp[:,:,0], 'Hyp' + ext,
                             example=exfile, mask=maskvol)
             else:
-                fileio.save(Yhat[testids, :].T, 'yhat' + ext,
-                            example=exfile, mask=maskvol)
-                fileio.save(S2[testids, :].T, 'ys2' + ext,
-                            example=exfile, mask=maskvol)
-                fileio.save(Z[testids, :].T, 'Z' + ext, example=exfile,
-                            mask=maskvol)
+                fileio.save(Yhat[testids, :].T, 'yhat' + ext, example=exfile, mask=maskvol)
+                fileio.save(Yhat[trainids, :].T, 'yhat_controls' + ext, example=exfile, mask=maskvol)
+
+                fileio.save(S2[testids, :].T, 'ys2' + ext, example=exfile, mask=maskvol)
+                fileio.save(S2[trainids, :].T, 'ys2_controls' + ext, example=exfile, mask=maskvol)
+
+                fileio.save(Z[testids, :].T, 'Z' + ext, example=exfile, mask=maskvol)
+                fileio.save(Z[trainids, :].T, 'Z_controls' + ext, example=exfile, mask=maskvol)
+
                 fileio.save(Rho, 'Rho' + ext, example=exfile, mask=maskvol)
+                fileio.save(Rho_tr, 'Rho_controls' + ext, example=exfile, mask=maskvol)
+
                 fileio.save(pRho, 'pRho' + ext, example=exfile, mask=maskvol)
+                fileio.save(pRho_tr, 'pRho_controls' + ext, example=exfile, mask=maskvol)
+
                 fileio.save(RMSE, 'rmse' + ext, example=exfile, mask=maskvol)
+                fileio.save(RMSE_tr, 'rmse_controls' + ext, example=exfile, mask=maskvol)
+
                 fileio.save(SMSE, 'smse' + ext, example=exfile, mask=maskvol)
+                fileio.save(SMSE_tr, 'smse_controls' + ext, example=exfile, mask=maskvol)
                 if cvfolds is None:
                     fileio.save(Hyp[:,:,0], 'Hyp' + ext,
                                 example=exfile, mask=maskvol)

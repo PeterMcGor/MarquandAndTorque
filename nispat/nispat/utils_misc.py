@@ -98,6 +98,10 @@ fn_dict = {FunctionsID.GEN_BATCHES: generate_batches, FunctionsID.FIT_BATCHES: f
 
 if __name__ == '__main__':
     print("Utils_misc")
+    # fit_per_batches("/home/pmacias/Projects/JanJo/MarquandAndTorque/test_normative_modeling/",
+    #                 "/home/pmacias/Projects/JanJo/MarquandAndTorque/test_normative_modeling/covariates_HC.txt",
+    #                 testcov="/home/pmacias/Projects/JanJo/MarquandAndTorque/test_normative_modeling/covariates_allpatients.txt",
+    #                 from_to=[1, 11], outputsuffix="_ahe")
     parser = argparse.ArgumentParser()
     parser.add_argument("function", help="function to execute", choices=[f for f in fn_dict.keys()])
     parser.add_argument("processing_dirs", help="a single dir except f you are creating a structure for computation "
