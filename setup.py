@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-REQUIRED_PACKAGES = ["pandas", "scipy", "nibabel", "sklearn", "torch"]
+REQUIRED_PACKAGES = ["pandas==0.25.1","scipy", "nibabel", "sklearn", "torch"]
 
 setup(name='nispat',
       version='0.2',

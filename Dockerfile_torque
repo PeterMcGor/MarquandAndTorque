@@ -56,7 +56,6 @@ ENV LANG C.UTF-8
 WORKDIR /
 COPY setup.py setup.py
 RUN pip install -e .
-RUN conda install pandas==1.0.0
 COPY nispat/ nispat
 WORKDIR /nispat
 COPY test_normative_modeling/ test_normative_modeling
