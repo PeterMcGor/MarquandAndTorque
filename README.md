@@ -30,5 +30,3 @@ I have included Andre Marquand work for nispat --> https://github.com/amarquand/
 ###### Include duration and memory parameters 
 `/opt/conda/bin/python nispat/test_normative_modeling/run_normative_parallel_test.py --processing_dir /mnt/data/ --cv_folds #folds --cpu_cores #n_cores --memory '4gb' --duration '01:00:00' 
 `
-
-
