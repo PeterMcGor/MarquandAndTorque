@@ -146,6 +146,7 @@ if __name__ == '__main__':
     frm_last_exec = args.frm_last_exec
     cov_names = args.cov_names
     coll_suf = args.coll_suf
+    folds = args.cvfolds
 
     from_to = None if frm == -1 or to == -1 else [frm, to]
     print("Function", FunctionsID.RUN_PER_COVS)
@@ -155,13 +156,13 @@ if __name__ == '__main__':
     elif args.function == FunctionsID.FIT_BATCHES:
 
         fit_per_batches(processing_dir, covfile=covariates, testcov=test_covariates, maskfile=maskfile, from_to=from_to,
-                        batch_pattern=batch_pattern, alg=alg, cvfolds=args, configparam=configparams,
+                        batch_pattern=batch_pattern, alg=alg, cvfolds=folds, configparam=configparams,
                         saveoutput=saveoutput, outputsuffix=outputsuffix, frm_last_exec=frm_last_exec)
     elif args.function == FunctionsID.COLLECT:
         collect_nm(processing_dir, collect=True, binary=binary, outputsuffixes=coll_suf)
     else:
         run_per_covariates(processing_dir, cov_names, covariates, cov_test_file=test_covariates,  maskfile=maskfile,
-                           from_to=from_to, batch_pattern=batch_pattern, alg=alg, cvfolds=args, configparam=configparams,
+                           from_to=from_to, batch_pattern=batch_pattern, alg=alg, cvfolds=folds, configparam=configparams,
                            saveoutput=saveoutput, frm_last_exec=frm_last_exec)
 
 
