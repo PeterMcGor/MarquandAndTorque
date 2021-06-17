@@ -46,13 +46,13 @@ def fit_per_batches(processing_dir, covfile, testcov=None, maskfile=None, from_t
             assert covfile is not None
             batch_testrespfile = glob.glob(os.path.join(batch_dir, "testresp_batch_*"))
             batch_testrespfile = None if len(batch_testrespfile) != 1 else batch_testrespfile[0]
-            print(batch_respfile)
-            print(batch_testrespfile)
             os.chdir(batch_dir)
+            if cvfolds is not None:
+                cvfolds = int(cvfolds)
+                
             normative.estimate(batch_respfile, covfile, maskfile=maskfile, cvfolds=cvfolds, testcov=testcov,
-                               testresp=batch_testrespfile, alg=alg, configparam=configparam, saveoutput=saveoutput,
-                               outputsuffix=outputsuffix)
-    os.chdir(init_dir)
+                               testresp=batch_testrespfile, alg=alg, configparam=configparam, saveoutput=saveoutput, outputsuffix=outputsuffix)
+            os.chdir(init_dir)
 
 def run_per_covariates(processing_dir, train_covariates, cov_file, cov_test_file = None, maskfile=None, from_to=None,
                        batch_pattern='batch_',alg='gpr', cvfolds=None, configparam=None, saveoutput=True,
