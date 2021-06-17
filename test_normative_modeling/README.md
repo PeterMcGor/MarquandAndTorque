@@ -9,6 +9,7 @@ Covariates files must contain a header with covariates names. Check `~/MarquandA
 
 ## Generate batches
 -fpb (features per batch) number of features to fit per batch (paralelization purposes). By Default 50
+
 `python -u /mnt/data_code/nispat/nispat/utils_misc.py generate_batches /mnt/data_code/test_normative_modeling/ -rtrain /mnt/data_code/test_normative_modeling/features_HC.txt -rtest /mnt/data_code/test_normative_modeling/features_allpatients.txt -fpb 10`
 
 ## Fit the models 
